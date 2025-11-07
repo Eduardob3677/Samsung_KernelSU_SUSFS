@@ -60,7 +60,9 @@ jobs:
       - name: Clone Kernel Source
         run: |
           git clone https://github.com/WildKernels/Samsung_Kernels.git -b ${{ inputs.branch }} $CONFIG
-
+          cd $CONFIG
+          git lfs install --local
+          git lfs pull
           
       - name: Check Directory Space Usage
         run: |
