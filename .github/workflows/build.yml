@@ -192,6 +192,7 @@ jobs:
           set -e
           set -x
           cd "$CONFIG"
+          chmod +x build_kernel_GKI.sh
           echo "Building the kernel..."
           ./build_kernel_GKI.sh
           
