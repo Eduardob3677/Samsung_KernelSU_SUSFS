@@ -211,13 +211,13 @@ jobs:
           cd "$CONFIG"
           
           if [[ "${{ inputs.branch }}" == "SM-S928B-Oneui7" || "${{ inputs.branch }}" == "SM-S928B-Oneui8" ]]; then
-            cp ./kernel_platform/sec/dist/Image AnyKernel3/Image
+            cp ./kernel_platform/sec/dist/Image ../AnyKernel3/Image
           elif [[ "${{ inputs.branch }}" == "SM-A366B" ]]; then
-            cp ./kernel_platform/gki/dist/Image AnyKernel3/Image
+            cp ./kernel_platform/gki/dist/Image ../AnyKernel3/Image
           elif [[ "${{ inputs.branch }}" == "SM-X916B" ]]; then
-            cp ./kernel_platform/sec/dist/Image AnyKernel3/Image
+            cp ./kernel_platform/sec/dist/Image ../AnyKernel3/Image
           elif [[ "${{ inputs.branch }}" == "SM-F946N" ]]; then
-            cp ./kernel_platform/sec/dist/Image AnyKernel3/Image
+            cp ./kernel_platform/sec/dist/Image ../AnyKernel3/Image
           else
             echo "Error: Image file not found in any expected location"
             exit 1
