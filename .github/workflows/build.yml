@@ -56,6 +56,19 @@ jobs:
           git clone https://github.com/WildKernels/AnyKernel3.git -b "$ANYKERNEL_BRANCH"
           git clone https://github.com/WildKernels/kernel_patches.git
           git clone https://gitlab.com/simonpunk/susfs4ksu.git -b "$SUSFS_BRANCH"
+
+          cd susfs4ksu
+          TARGET="${{ inputs.android_version }}-${{ inputs.kernel_version }}"
+          COMMIT=""
+          case "$TARGET" in
+            android12-5.10) COMMIT="8a76ba240d1f7315352b49d97d854a4b166e5b47" ;;
+            android13-5.10) COMMIT="e5c9eabfc6dcfc677d11f46ce1d5ff786de60a92" ;;
+            android13-5.15) COMMIT="babf6be195576f09aae79650d47abf6a76e8a21b" ;;
+            android14-5.15) COMMIT="19f339e804ba9aebd9c6d735b965e2b9396c73ae" ;;
+            android14-6.1) COMMIT="a162e2469d0b472545e5e46457eee171c0975fb0" ;;
+            android15-6.6) COMMIT="f450ec00bf592d080f59b01ff6f9242456c9a427" ;;
+          esac
+          git checkout "$COMMIT"
       
       - name: Clone Kernel Source
         run: |
