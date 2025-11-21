@@ -225,6 +225,8 @@ jobs:
           echo "Building the kernel..."
           if [[ "${{ inputs.branch }}" == "SM-S928B-Oneui7" || "${{ inputs.branch }}" == "SM-S928B-Oneui8" ]]; then
             ./build_kernel_GKI.sh
+          elif [[ "${{ inputs.branch }}" == "SM-X916B" ]]; then
+            LTO=thin ./build_kernel_GKI.sh || true
           else
             #temporarily using this until i can figure out the other phones build script issues
             cd kernel_platform
@@ -249,6 +251,8 @@ jobs:
             cp ./kernel_platform/sec/dist/Image ../AnyKernel3/Image
           elif [[ -f ./$CONFIG/bazel-bin/common/kernel_aarch64/Image ]]; then
             cp ./$CONFIG/bazel-bin/common/kernel_aarch64/Image ../AnyKernel3/Image
+          elif [[ "${{ inputs.branch }}" == "SM-X916B" ]]; then
+            cp ./out/msm-kalama-kalama-gki/dist/Image ../AnyKernel3/Image
           else
             echo "Error: Image file not found in any expected location"
             exit 1
