@@ -97,7 +97,7 @@ jobs:
 
       - name: Add KernelSU
         run: |
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cd "$CONFIG"
           else
             cd "$CONFIG/kernel_platform/common"
@@ -106,7 +106,7 @@ jobs:
 
       - name: Getting KernelSU Version
         run: |
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cd "$CONFIG/Wild_KSU/kernel"
           else
             cd "$CONFIG/kernel_platform/common/Wild_KSU/kernel"
@@ -128,7 +128,7 @@ jobs:
           # Apply compatibility fixes
           SUSFS_VERSION="1.5.12"
 
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cp ../susfs4ksu/kernel_patches/fs/* ./fs/
             cp ../susfs4ksu/kernel_patches/include/linux/* ./include/linux/
           else
@@ -137,13 +137,13 @@ jobs:
           fi
 
           # Apply core SUSFS patches
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch ./
           else
             cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch ./kernel_platform/common/
           fi
           
-          if ! [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if ! [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cd kernel_platform/common
           fi
           
@@ -169,7 +169,7 @@ jobs:
             cp ../../../kernel_patches/samsung/${{ inputs.branch }}/* ./
             patch -p1 < fix_namespace.patch
             patch -p1 < fix_base.patch
-          elif [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" ]]; then
+          elif [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" ]]; then
             cp ../kernel_patches/samsung/${{ inputs.branch }}/* ./
             patch -p1 < fix_namespace.patch
             patch -p1 < fix_base.patch
@@ -178,7 +178,7 @@ jobs:
 
           # Apply KSU integration patches
           cd Wild_KSU
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cp ../../susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch .
             patch -p1 < 10_enable_susfs_for_ksu.patch || true
           
@@ -207,12 +207,12 @@ jobs:
 
       - name: Apply Hooks Patches
         run: |
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cd "$CONFIG"
             cp ../kernel_patches/wild/hooks/scope_min_manual_hooks_v1.4.patch ./
           else
             cd "$CONFIG/kernel_platform/common"
-            cp ../../../../kernel_patches/wild/hooks/scope_min_manual_hooks_v1.4.patch ./
+            cp ../../../kernel_patches/wild/hooks/scope_min_manual_hooks_v1.4.patch ./
           fi          
           
           if [[ "${{ inputs.branch }}" == "SM-A366B" || "${{ inputs.branch }}" == "SM-A546B-Oneui7" ]]; then
@@ -224,7 +224,7 @@ jobs:
 
       - name: Add BBG
         run: |
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cd "$CONFIG"
           else
             cd "$CONFIG/kernel_platform/common"            
@@ -237,7 +237,7 @@ jobs:
 
       - name: Set Kernel Configuration Variables
         run: |
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cd "$CONFIG"
           else
             cd "$CONFIG/kernel_platform/common"            
@@ -251,7 +251,7 @@ jobs:
 
       - name: Change Kernel Name
         run: |
-          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cd "$CONFIG"
           else
             cd "$CONFIG/kernel_platform/common"            
@@ -287,7 +287,7 @@ jobs:
             ./build_kernel_GKI.sh
           elif [[ "${{ inputs.branch }}" == "SM-X916B" || "${{ inputs.branch }}" == "SM-F946N" ]]; then
             LTO=thin ./build_kernel_GKI.sh || true
-          elif [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          elif [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             LTO=thin ./build_kernel.sh
           else
             #temporarily using this until i can figure out the other phones build script issues
@@ -315,7 +315,7 @@ jobs:
             cp ./$CONFIG/bazel-bin/common/kernel_aarch64/Image ../AnyKernel3/Image
           elif [[ "${{ inputs.branch }}" == "SM-X916B" || "${{ inputs.branch }}" == "SM-F946N" ]]; then
             cp ./out/msm-kalama-kalama-gki/dist/Image ../AnyKernel3/Image
-          elif [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+          elif [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             cp ./arch/arm64/boot/Image ../AnyKernel3/Image
           else
             echo "Error: Image file not found in any expected location"
