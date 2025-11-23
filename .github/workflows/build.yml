@@ -97,12 +97,20 @@ jobs:
 
       - name: Add KernelSU
         run: |
-          cd "$CONFIG/kernel_platform/common"
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cd "$CONFIG"
+          else
+            cd "$CONFIG/kernel_platform/common"
+          fi
           curl -LSs "https://raw.githubusercontent.com/WildKernels/Wild_KSU/wild/kernel/setup.sh" | bash -s wild
 
       - name: Getting KernelSU Version
         run: |
-          cd "$CONFIG/kernel_platform/common/Wild_KSU/kernel"
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cd "$CONFIG/Wild_KSU/kernel"
+          else
+            cd "$CONFIG/kernel_platform/common/Wild_KSU/kernel"
+          fi
           BASE_VERSION=10200
           COMMIT_COUNT=$(/usr/bin/git rev-list --count HEAD)
           KSU_VERSION=$(expr $COMMIT_COUNT "+" $BASE_VERSION)
@@ -120,12 +128,25 @@ jobs:
           # Apply compatibility fixes
           SUSFS_VERSION="1.5.12"
 
-          cp ../susfs4ksu/kernel_patches/fs/* ./kernel_platform/common/fs/
-          cp ../susfs4ksu/kernel_patches/include/linux/* ./kernel_platform/common/include/linux/
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cp ../susfs4ksu/kernel_patches/fs/* ./fs/
+            cp ../susfs4ksu/kernel_patches/include/linux/* ./include/linux/
+          else
+            cp ../susfs4ksu/kernel_patches/fs/* ./kernel_platform/common/fs/
+            cp ../susfs4ksu/kernel_patches/include/linux/* ./kernel_platform/common/include/linux/
+          fi
 
           # Apply core SUSFS patches
-          cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch ./kernel_platform/common/
-          cd kernel_platform/common
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch ./
+          else
+            cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch ./kernel_platform/common/
+          fi
+          
+          if ! [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cd kernel_platform/common
+          fi
+          
 
           # Apply SUSFS core patch
           patch -p1 < 50_add_susfs_in_gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}.patch || true
@@ -148,28 +169,53 @@ jobs:
             cp ../../../kernel_patches/samsung/${{ inputs.branch }}/* ./
             patch -p1 < fix_namespace.patch
             patch -p1 < fix_base.patch
+          elif [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" ]]; then
+            cp ../kernel_patches/samsung/${{ inputs.branch }}/* ./
+            patch -p1 < fix_namespace.patch
+            patch -p1 < fix_base.patch
+            patch -p1 < Disable_CRC.patch
           fi
 
           # Apply KSU integration patches
           cd Wild_KSU
-          cp ../../../../susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch .
-          patch -p1 < 10_enable_susfs_for_ksu.patch || true
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cp ../../susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch .
+            patch -p1 < 10_enable_susfs_for_ksu.patch || true
           
-          cp ../../../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_core_hook.c.patch ./
-          patch -p1 < fix_core_hook.c.patch
+            cp ../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_core_hook.c.patch ./
+            patch -p1 < fix_core_hook.c.patch
 
-          cp ../../../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_sucompat.c.patch ./
-          patch -p1 < fix_sucompat.c.patch
+            cp ../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_sucompat.c.patch ./
+            patch -p1 < fix_sucompat.c.patch
 
-          cp ../../../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_kernel_compat.c.patch ./
-          patch -p1 < fix_kernel_compat.c.patch
+            cp ../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_kernel_compat.c.patch ./
+            patch -p1 < fix_kernel_compat.c.patch
+          else
+            cp ../../../../susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch .
+            patch -p1 < 10_enable_susfs_for_ksu.patch || true
+          
+            cp ../../../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_core_hook.c.patch ./
+            patch -p1 < fix_core_hook.c.patch
+
+            cp ../../../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_sucompat.c.patch ./
+            patch -p1 < fix_sucompat.c.patch
+
+            cp ../../../../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/fix_kernel_compat.c.patch ./
+            patch -p1 < fix_kernel_compat.c.patch
+          fi
+
 
       - name: Apply Hooks Patches
         run: |
-          cd "$CONFIG/kernel_platform/common"
-          cp ../../../kernel_patches/wild/hooks/scope_min_manual_hooks_v1.4.patch ./
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cd "$CONFIG"
+            cp ../kernel_patches/wild/hooks/scope_min_manual_hooks_v1.4.patch ./
+          else
+            cd "$CONFIG/kernel_platform/common"
+            cp ../../../../kernel_patches/wild/hooks/scope_min_manual_hooks_v1.4.patch ./
+          fi          
           
-          if [[ "${{ inputs.branch }}" == "SM-A366B" ]]; then
+          if [[ "${{ inputs.branch }}" == "SM-A366B" || "${{ inputs.branch }}" == "SM-A546B-Oneui7" ]]; then
            patch -p1 < scope_min_manual_hooks_v1.4.patch || true
           else
            patch -p1 < scope_min_manual_hooks_v1.4.patch || true
@@ -178,6 +224,12 @@ jobs:
 
       - name: Add BBG
         run: |
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cd "$CONFIG"
+          else
+            cd "$CONFIG/kernel_platform/common"            
+          fi 
+          
           cd "$CONFIG/kernel_platform/common"
           echo "Adding BBG..."
           wget -O- https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh | bash
@@ -185,7 +237,12 @@ jobs:
 
       - name: Set Kernel Configuration Variables
         run: |
-          cd "$CONFIG/kernel_platform/common"
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cd "$CONFIG"
+          else
+            cd "$CONFIG/kernel_platform/common"            
+          fi 
+          
           echo "Initializing kernel configuration..."
           patch -p1 < config.patch
           
@@ -194,18 +251,23 @@ jobs:
 
       - name: Change Kernel Name
         run: |
-          cd "$CONFIG/kernel_platform"
+          if [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cd "$CONFIG"
+          else
+            cd "$CONFIG/kernel_platform/common"            
+          fi
+          
           #Add Wild to Kernel Version
-          sed -i '$s|echo "\$res"|echo "\$res-Wild"|' ./common/scripts/setlocalversion
+          sed -i '$s|echo "\$res"|echo "\$res-Wild"|' ./scripts/setlocalversion
           #Set Kernel Timestamp
-          perl -pi -e 's{UTS_VERSION="\$\(echo \$UTS_VERSION \$CONFIG_FLAGS \$TIMESTAMP \| cut -b -\$UTS_LEN\)"}{UTS_VERSION="#1 SMP PREEMPT Sun Apr 20 04:20:00 UTC 2025"}' ./common/scripts/mkcompile_h
+          perl -pi -e 's{UTS_VERSION="\$\(echo \$UTS_VERSION \$CONFIG_FLAGS \$TIMESTAMP \| cut -b -\$UTS_LEN\)"}{UTS_VERSION="#1 SMP PREEMPT Sun Apr 20 04:20:00 UTC 2025"}' ./scripts/mkcompile_h
           if [ -f "build/build.sh" ]; then
             #Remove Dirty Flag
-            sed -i 's/-dirty//' ./common/scripts/setlocalversion
+            sed -i 's/-dirty//' ./scripts/setlocalversion
           else
             #Remove Abi Exports and Error
-            rm -rf ./common/android/abi_gki_protected_exports_*
-            perl -pi -e 's/^\s*"protected_exports_list"\s*:\s*"android\/abi_gki_protected_exports_aarch64",\s*$//;' ./common/BUILD.bazel
+            rm -rf ./android/abi_gki_protected_exports_*
+            perl -pi -e 's/^\s*"protected_exports_list"\s*:\s*"android\/abi_gki_protected_exports_aarch64",\s*$//;' ./BUILD.bazel
           fi
 
       - name: Set file name
@@ -225,6 +287,8 @@ jobs:
             ./build_kernel_GKI.sh
           elif [[ "${{ inputs.branch }}" == "SM-X916B" || "${{ inputs.branch }}" == "SM-F946N" ]]; then
             LTO=thin ./build_kernel_GKI.sh || true
+          elif [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            LTO=thin ./build_kernel.sh
           else
             #temporarily using this until i can figure out the other phones build script issues
             cd kernel_platform
@@ -251,6 +315,8 @@ jobs:
             cp ./$CONFIG/bazel-bin/common/kernel_aarch64/Image ../AnyKernel3/Image
           elif [[ "${{ inputs.branch }}" == "SM-X916B" || "${{ inputs.branch }}" == "SM-F946N" ]]; then
             cp ./out/msm-kalama-kalama-gki/dist/Image ../AnyKernel3/Image
+          elif [[ "${{ inputs.branch }}" == "SM-A645B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
+            cp ./arch/arm64/boot/Image ../AnyKernel3/Image
           else
             echo "Error: Image file not found in any expected location"
             exit 1
