@@ -72,15 +72,8 @@ jobs:
       
       - name: Clone Kernel Source
         run: |
-          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             git clone https://github.com/WildKernels/Samsung_Kernels.git -b ${{ inputs.branch }} $CONFIG
-            COMMON="$CONFIG"
-          else
-            git clone https://github.com/WildKernels/Samsung_Kernels.git -b ${{ inputs.branch }} $CONFIG
-            COMMON="$CONFIG/kernel_platform/common"
-          fi
-          echo "COMMON=$COMMON" >> $GITHUB_ENV
-          
+  
       - name: Set Path Environment Variables
         run: |
           ROOT="$GITHUB_WORKSPACE"
@@ -88,16 +81,22 @@ jobs:
           SUSFS4KSU="$ROOT/susfs4ksu"
           KERNEL_PATCHES="$ROOT/kernel_patches"
           ANYKERNEL3="$ROOT/AnyKernel3"
+          if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then  
+            COMMON="$CONFIG"
+          else
+            COMMON="$CONFIG/kernel_platform/common"
+          fi
 
           echo "ROOT=$ROOT" >> $GITHUB_ENV
           echo "KERNEL_ROOT=$KERNEL_ROOT" >> $GITHUB_ENV
           echo "SUSFS4KSU=$SUSFS4KSU" >> $GITHUB_ENV
           echo "KERNEL_PATCHES=$KERNEL_PATCHES" >> $GITHUB_ENV
           echo "ANYKERNEL3=$ANYKERNEL3" >> $GITHUB_ENV
+          echo "COMMON=$COMMON" >> $GITHUB_ENV
           
       - name: Extract all tar.xz files and delete them
+        working-directory: "$KERNEL_ROOT"
         run: |
-         cd "$CONFIG"
          find . -type f -name '*.tar.xz' -print0 | while IFS= read -r -d '' file; do
           echo "Extracting $file"
           tar -xf "$file"
