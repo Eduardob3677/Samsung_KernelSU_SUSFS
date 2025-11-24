@@ -76,18 +76,18 @@ jobs:
   
       - name: Set Path Environment Variables
         run: |
-          ROOT="$GITHUB_WORKSPACE"
-          KERNEL_ROOT="$ROOT/$CONFIG"
-          SUSFS4KSU="$ROOT/susfs4ksu"
-          KERNEL_PATCHES="$ROOT/kernel_patches"
-          ANYKERNEL3="$ROOT/AnyKernel3"
+          # ROOT="$GITHUB_WORKSPACE"
+          KERNEL_ROOT="$CONFIG"
+          SUSFS4KSU="susfs4ksu"
+          KERNEL_PATCHES="kernel_patches"
+          ANYKERNEL3="AnyKernel3"
           if [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then  
-            COMMON="$CONFIG"
+            COMMON="$KERNEL_ROOT"
           else
-            COMMON="$CONFIG/kernel_platform/common"
+            COMMON="$KERNEL_ROOT/kernel_platform/common"
           fi
 
-          echo "ROOT=$ROOT" >> $GITHUB_ENV
+          # echo "ROOT=$ROOT" >> $GITHUB_ENV
           echo "KERNEL_ROOT=$KERNEL_ROOT" >> $GITHUB_ENV
           echo "SUSFS4KSU=$SUSFS4KSU" >> $GITHUB_ENV
           echo "KERNEL_PATCHES=$KERNEL_PATCHES" >> $GITHUB_ENV
