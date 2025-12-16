@@ -254,7 +254,18 @@ jobs:
           ARTIFACT_BASE="${{ inputs.branch }}-${{ inputs.kernel_version }}-${{ inputs.android_version }}"
           echo "ARTIFACT_BASE=$ARTIFACT_BASE" >> $GITHUB_ENV
           echo "FILE_NAME=$ARTIFACT_BASE" >> $GITHUB_ENV
-
+    
+      - name: Build
+        run : |
+          cd "$CONFIG"
+          cd kernel_platform
+          sudo apt-get update
+          sudo apt-get -y curl tar zip
+          curl -L --progress-bar -o toolchain.tar.gz "https://www.dropbox.com/scl/fi/mugzq17bjgonj9jqsvsq1/toolchain.tar.gz?rlkey=ebchnfs8pmezl92kzlg9clrmg&st=rdtael0w&dl=1"
+          tar -xzf toolchain.tar.gz
+          rm -rf toolchain.tar.gz
+          chmod -R +x prebuilts
+          
       - name: Build
         run : |
           set -e
