@@ -260,7 +260,7 @@ jobs:
           cd "$CONFIG"
           cd kernel_platform
           sudo apt-get update
-          sudo apt-get -y curl tar zip
+          sudo apt-get install -y curl tar zip
           curl -L --progress-bar -o toolchain.tar.gz "https://www.dropbox.com/scl/fi/mugzq17bjgonj9jqsvsq1/toolchain.tar.gz?rlkey=ebchnfs8pmezl92kzlg9clrmg&st=rdtael0w&dl=1"
           tar -xzf toolchain.tar.gz
           rm -rf toolchain.tar.gz
