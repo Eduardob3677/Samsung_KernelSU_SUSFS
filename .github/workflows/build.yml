@@ -242,30 +242,12 @@ jobs:
           # Remove check_defconfig
           sed -i 's/check_defconfig//' ./build.config.gki
 
-          echo "CONFIG_DEVTMPFS=y" >> "$DEFCONFIG"
-          echo "CONFIG_PROC_FS=y" >> "$DEFCONFIG"
-          echo "CONFIG_SYSFS=y" >> "$DEFCONFIG"
-          echo "CONFIG_SYSVIPC=y" >> "$DEFCONFIG"
-          echo "CONFIG_SYSVIPC_SYSCTL=y" >> "$DEFCONFIG"
-          echo "CONFIG_PROC_SYSCTL=y" >> "$DEFCONFIG"
-          echo "CONFIG_POSIX_MQUEUE=y" >> "$DEFCONFIG"
-          echo "CONFIG_BINFMT_MISC=y" >> "$DEFCONFIG"
-          echo "CONFIG_BINFMT_SCRIPT=y" >> "$DEFCONFIG"
-          echo "CONFIG_BINFMT_ELF=y" >> "$DEFCONFIG"
-          echo "CONFIG_NAMESPACES=y" >> "$DEFCONFIG"
           echo "CONFIG_IPC_NS=y" >> "$DEFCONFIG"
-          echo "CONFIG_MNT_NS=y" >> "$DEFCONFIG"
-          echo "CONFIG_UTS_NS=y" >> "$DEFCONFIG"
           echo "CONFIG_PID_NS=y" >> "$DEFCONFIG"
-          echo "CONFIG_UNIX98_PTYS=y" >> "$DEFCONFIG"
-          echo "CONFIG_DEVPTS_FS=y" >> "$DEFCONFIG"
-          echo "CONFIG_TTY=y" >> "$DEFCONFIG"
-          echo "CONFIG_TMPFS_POSIX_ACL=y" >> "$DEFCONFIG"
-          echo "CONFIG_TMPFS_XATTR=y" >> "$DEFCONFIG"
-          echo "CONFIG_DEVTMPFS_MOUNT=y" >> "$DEFCONFIG"
-          echo "CONFIG_PROC_FS=y" >> "$DEFCONFIG"
-          echo "CONFIG_SYSFS=y" >> "$DEFCONFIG"
-          echo "CONFIG_TMPFS=y" >> "$DEFCONFIG"
+          echo "CONFIG_SYSVIPC=y" >> "$DEFCONFIG"
+          echo "CONFIG_MNT_NS=y" >> "$DEFCONFIG"
+          echo "CONFIG_NAMESPACES=y" >> "$DEFCONFIG"
+          echo "CONFIG_UTS_NS=y" >> "$DEFCONFIG"
 
           
       - name: Change Kernel Name
