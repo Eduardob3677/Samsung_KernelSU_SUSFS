@@ -72,7 +72,7 @@ jobs:
       
       - name: Clone Kernel Source
         run: |
-            git clone https://github.com/WildKernels/Samsung_Kernels.git -b ${{ inputs.branch }} $CONFIG
+            git clone https://github.com/Eduardob3677/msm_samsung.git -b ${{ inputs.branch }} $CONFIG
             
   
       - name: Set Path Environment Variables
@@ -99,15 +99,6 @@ jobs:
           echo "ANYKERNEL3=$ANYKERNEL3" >> $GITHUB_ENV
           echo "COMMON=$COMMON" >> $GITHUB_ENV
           
-      - name: Extract all tar.xz files and delete them
-        run: |
-          cd "$CONFIG"
-
-          find . -type f -name '*.tar.xz' -print0 | while IFS= read -r -d '' file; do
-            echo "Extracting $file"
-            tar -xf "$file"
-            rm "$file"
-          done
 
       - name: Check Directory Space Usage
         run: |
@@ -241,14 +232,6 @@ jobs:
           
           # Remove check_defconfig
           sed -i 's/check_defconfig//' ./build.config.gki
-
-          echo "CONFIG_IPC_NS=y" >> "$DEFCONFIG"
-          echo "CONFIG_PID_NS=y" >> "$DEFCONFIG"
-          echo "CONFIG_SYSVIPC=y" >> "$DEFCONFIG"
-          echo "CONFIG_MNT_NS=y" >> "$DEFCONFIG"
-          echo "CONFIG_NAMESPACES=y" >> "$DEFCONFIG"
-          echo "CONFIG_UTS_NS=y" >> "$DEFCONFIG"
-
           
       - name: Change Kernel Name
         run: |
@@ -279,11 +262,11 @@ jobs:
           cd "$CONFIG"
           echo "Building the kernel..."
           if [[ "${{ inputs.branch }}" == "SM-S928B-Oneui7" || "${{ inputs.branch }}" == "SM-S928B-Oneui8" ]]; then
-            chmod +x build_kernel_GKI.sh
-            ./build_kernel_GKI.sh
+            chmod +x build.sh
+            ./build.sh
           elif [[ "${{ inputs.branch }}" == "SM-X916B" || "${{ inputs.branch }}" == "SM-F946N" || "${{ inputs.branch }}" == "SM-S916B-Oneui8" ]]; then
-            chmod +x build_kernel_GKI.sh
-            LTO=thin ./build_kernel_GKI.sh || true
+            chmod +x build.sh
+            LTO=thin ./build.sh || true
           elif [[ "${{ inputs.branch }}" == "SM-A546B-Oneui7" || "${{ inputs.branch }}" == "SM-A546E-Oneui7" ]]; then
             sudo apt update
             sudo apt-get install -y libyaml-dev
