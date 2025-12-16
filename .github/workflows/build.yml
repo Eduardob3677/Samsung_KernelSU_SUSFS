@@ -266,12 +266,6 @@ jobs:
           rm -rf toolchain.tar.gz
           chmod -R +x prebuilts
           
-      - name: Clean Up ABI Protected Exports
-        run: |
-          cd "$CONFIG/kernel_platform"
-          rm -f msm-kernel/android/abi_gki_protected_exports_* || true
-          df -h
-          
       - name: Build
         run : |
           set -e
