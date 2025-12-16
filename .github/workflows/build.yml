@@ -38,7 +38,8 @@ jobs:
       - name: Check Disk Space After Cleanup
         run: |
           echo "===== Total Disk Space After Cleanup in GB ====="
-          df -B
+          df -BG
+          
       - name: Install Required Package
         run: |
           sudo apt-get update
