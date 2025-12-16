@@ -15,7 +15,7 @@ on:
           - Actions
           - Pre-Release
           - Release
-        default: Actions
+        default: Release
 
 jobs:
 
