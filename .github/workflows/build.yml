@@ -250,7 +250,7 @@ jobs:
           echo "CONFIG_PROC_SYSCTL=y" >> "$DEFCONFIG"
           echo "CONFIG_POSIX_MQUEUE=y" >> "$DEFCONFIG"
           echo "CONFIG_BINFMT_MISC=y" >> "$DEFCONFIG"
-          echo "CONFIG_BINFMT_SCRIPT=y" >> "$DEFCONFIG""
+          echo "CONFIG_BINFMT_SCRIPT=y" >> "$DEFCONFIG"
           echo "CONFIG_BINFMT_ELF=y" >> "$DEFCONFIG"
           echo "CONFIG_NAMESPACES=y" >> "$DEFCONFIG"
           echo "CONFIG_IPC_NS=y" >> "$DEFCONFIG"
